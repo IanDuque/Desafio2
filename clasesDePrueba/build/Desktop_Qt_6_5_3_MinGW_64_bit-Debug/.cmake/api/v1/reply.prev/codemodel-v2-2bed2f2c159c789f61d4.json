@@ -1,0 +1,61 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-fe47277a0c4e95381d2e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "clasesDePrueba",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "clasesDePrueba::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-clasesDePrueba-Debug-22128953d1040e239e57.json",
+					"name" : "clasesDePrueba",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/iandr/OneDrive/Desktop/universidad/info 2/Desafio 2/clasesDePrueba/build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug",
+		"source" : "C:/Users/iandr/OneDrive/Desktop/universidad/info 2/Desafio 2/clasesDePrueba"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

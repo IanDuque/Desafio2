@@ -35,6 +35,9 @@ void Artistica::mostrar() const {
 int Artistica::getId() const {
     return id;
 }
+string Artistica::getnombre() const {
+    return nombre;
+}
 /*void Artistica::mostrar() const {
     cout << "ID: " << id << ", Nombre: " << nombre << ", País: " << pais << endl;
     for (int i = 0; i < cantidadAlbumes; ++i) {

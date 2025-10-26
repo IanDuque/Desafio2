@@ -1,0 +1,41 @@
+10001|01|Impacto Inicial|Rock|IndieRecords|2023-01-01|portadas/impacto.jpg|9
+10001|02|Segundo Asalto|Pop|IndieRecords|2023-03-01|portadas/asalto.jpg|8
+10001|03|Tercer Round|Rock|IndieRecords|2023-05-01|portadas/round.jpg|7
+10001|04|Cuarta Dimension|Electro|IndieRecords|2023-07-01|portadas/dimension.jpg|10
+10001|05|Quinto Elemento|Rock|IndieRecords|2023-09-01|portadas/elemento.jpg|9
+10001|06|Sexta Ola|Pop|IndieRecords|2023-11-01|portadas/ola.jpg|8
+10001|07|Septimo Cielo|Rock|IndieRecords|2024-01-01|portadas/cielo.jpg|7
+10001|08|Octava Nota|Electro|IndieRecords|2024-03-01|portadas/nota.jpg|10
+10002|01|Raices|Regional|Universal|2022-01-01|portadas/raices.jpg|7
+10002|02|Camino Sur|Regional|Universal|2022-03-01|portadas/camino.jpg|8
+10002|03|Viento Norte|Regional|Universal|2022-05-01|portadas/viento.jpg|9
+10002|04|Sol de Mayo|Regional|Universal|2022-07-01|portadas/sol.jpg|7
+10002|05|Luna del Sur|Regional|Universal|2022-09-01|portadas/luna.jpg|8
+10002|06|Canto Viejo|Regional|Universal|2022-11-01|portadas/canto.jpg|9
+10002|07|Herencia|Regional|Universal|2023-01-01|portadas/herencia.jpg|10
+10002|08|Tradicion|Regional|Universal|2023-03-01|portadas/tradicion.jpg|9
+10003|01|Nova Beats|Electronica|BeatLab|2025-01-01|portadas/nova.jpg|10
+10003|02|Digital Pulse|Electronica|BeatLab|2025-03-01|portadas/pulse.jpg|9
+10003|03|Synth World|Electronica|BeatLab|2025-05-01|portadas/synth.jpg|8
+10003|04|Neon Flow|Electronica|BeatLab|2025-07-01|portadas/neon.jpg|10
+10003|05|Bassline|Electronica|BeatLab|2025-09-01|portadas/bassline.jpg|9
+10003|06|Echoes|Electronica|BeatLab|2025-11-01|portadas/echoes.jpg|8
+10003|07|Frequency|Electronica|BeatLab|2026-01-01|portadas/frequency.jpg|9
+10003|08|Voltage|Electronica|BeatLab|2026-03-01|portadas/voltage.jpg|10
+10004|01|Latino Power|Fusion|LatinaMix|2024-01-01|portadas/power.jpg|9
+10004|02|Ritmo Caliente|Fusion|LatinaMix|2024-03-01|portadas/ritmo.jpg|8
+10004|03|Sabor Tropical|Fusion|LatinaMix|2024-05-01|portadas/sabor.jpg|9
+10004|04|Fiesta Latina|Fusion|LatinaMix|2024-07-01|portadas/fiesta.jpg|10
+10004|05|Corazon Andino|Fusion|LatinaMix|2024-09-01|portadas/corazon.jpg|9
+10004|06|Pasion Caribe|Fusion|LatinaMix|2024-11-01|portadas/pasion.jpg|8
+10004|07|Raices Vivas|Fusion|LatinaMix|2025-01-01|portadas/raicesvivas.jpg|9
+10004|08|Alma Latina|Fusion|LatinaMix|2025-03-01|portadas/alma.jpg|10
+10005|01|Apocalipsis|Rock|RockForce|2023-01-01|portadas/apocalipsis.jpg|9
+10005|02|Renacer|Rock|RockForce|2023-03-01|portadas/renacer.jpg|8
+10005|03|Caos|Rock|RockForce|2023-05-01|portadas/caos.jpg|9
+10005|04|Resistencia|Rock|RockForce|2023-07-01|portadas/resistencia.jpg|10
+10005|05|Furia|Rock|RockForce|2023-09-01|portadas/furia.jpg|9
+10005|06|Tormenta|Rock|RockForce|2023-11-01|portadas/tormenta.jpg|8
+10005|07|Oscuridad|Rock|RockForce|2024-01-01|portadas/oscuridad.jpg|9
+10005|08|Luz Final|Rock|RockForce|2024-03-01|portadas/luz.jpg|10
+

@@ -5,7 +5,6 @@
 #include <iostream>
 using namespace std;
 
-// 🔧 Utilidad para dividir campos por '|'
 void dividirCampos(const string& linea, char campos[][100], int& cantidad) {
     cantidad = 0;
     char buffer[500];
@@ -19,7 +18,6 @@ void dividirCampos(const string& linea, char campos[][100], int& cantidad) {
     }
 }
 
-// 🎤 Precarga de artistas
 void cargarArtistas(const string& ruta, Artistica artistas[], int& totalArtistas) {
     ifstream file(ruta);
     string linea;
@@ -68,23 +66,21 @@ void cargarAlbumes(const string& ruta, Album albumes[], int& totalAlbumes, Artis
         string fecha = campos[5];
         string portada = campos[6];
         int calificacion = atoi(campos[7]);
-
-        albumes[totalAlbumes].setDatos(idCompleto, nombre, campos[0], genero, disquera, fecha, portada, calificacion);
-        totalAlbumes++;
-
-        // Asociar álbum al artista
+        string nombreArtista = "Desconocido";
         for (int i = 0; i < totalArtistas; ++i) {
             if (artistas[i].getId() == idArtista) {
+                nombreArtista = artistas[i].getnombre();
                 artistas[i].agregarAlbum(idCompleto, nombre);
                 break;
             }
         }
+        albumes[totalAlbumes].setDatos(idCompleto, nombre, nombreArtista, genero, disquera, fecha, portada, calificacion);
+        totalAlbumes++;
     }
 
     file.close();
 }
 
-// 🎵 Precarga de canciones
 void cargarCanciones(const string& ruta, Album albumes[], int totalAlbumes) {
     ifstream file(ruta);
     string linea;
@@ -92,7 +88,6 @@ void cargarCanciones(const string& ruta, Album albumes[], int totalAlbumes) {
     while (getline(file, linea)) {
         char campos[3][100];
         int cantidad = 0;
-
         dividirCampos(linea, campos, cantidad);
         if (cantidad != 3) continue;
 
@@ -101,16 +96,21 @@ void cargarCanciones(const string& ruta, Album albumes[], int totalAlbumes) {
         float duracion = atof(campos[2]);
 
         int idArtista = idCancion / 10000;
-        int idAlbum = (idCancion / 100) % 100;
-        int idAlbumCompleto = idArtista * 100 + idAlbum;
-
-        for (int i = 0; i < totalAlbumes; ++i) {
+        int idAlbumSimple = (idCancion / 100) % 100;
+        int idAlbumCompleto = idArtista * 100 + idAlbumSimple;
+        bool encontrado = false;
+        for (int i = 0; i < totalAlbumes; i++) {
             if (albumes[i].getId() == idAlbumCompleto) {
+
                 albumes[i].agregarCancion(idCancion, nombre, duracion);
+                encontrado = true;
                 break;
             }
         }
-    }
 
+        if (!encontrado) {
+            cout << "No se encontro el album con ID " << idAlbumCompleto << " para la cancion " << nombre << endl;
+        }
+    }
     file.close();
 }

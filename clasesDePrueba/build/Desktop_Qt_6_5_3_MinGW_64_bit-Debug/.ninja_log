@@ -1,0 +1,17 @@
+# ninja log v6
+30	916	7831772637547954	CMakeFiles/clasesDePrueba.dir/album.cpp.obj	25c0f800983ae080
+13	754	7831853991319194	CMakeFiles/clasesDePrueba.dir/main.cpp.obj	86e9bab516ea91f2
+37	926	7831772637619207	CMakeFiles/clasesDePrueba.dir/artista.cpp.obj	b74f6d282e51bedf
+71	845	7831752223346492	CMakeFiles/clasesDePrueba.dir/cancion.cpp.obj	7b963a343d89d991
+776	1110	7831918842885851	clasesDePrueba.exe	ed4521ebf3c5231c
+18	774	7831918835308731	CMakeFiles/clasesDePrueba.dir/precarga.cpp.obj	a8d41aa93ed17017
+45	670	7831941056516593	CMakeFiles/clasesDePrueba.dir/metricas.cpp.obj	90a2ad7494c01bab
+12	893	7831941056184947	CMakeFiles/clasesDePrueba.dir/main.cpp.obj	86e9bab516ea91f2
+30	955	7831941056370750	CMakeFiles/clasesDePrueba.dir/precarga.cpp.obj	a8d41aa93ed17017
+955	1308	7831941065611916	clasesDePrueba.exe	5a100caa5954148
+11	830	7831950786733074	CMakeFiles/clasesDePrueba.dir/metricas.cpp.obj	90a2ad7494c01bab
+831	1172	7831950794933114	clasesDePrueba.exe	5a100caa5954148
+9	792	7831961943505135	CMakeFiles/clasesDePrueba.dir/metricas.cpp.obj	90a2ad7494c01bab
+794	1099	7831961951350769	clasesDePrueba.exe	5a100caa5954148
+10	785	7831967613262995	CMakeFiles/clasesDePrueba.dir/metricas.cpp.obj	90a2ad7494c01bab
+787	1137	7831967621031189	clasesDePrueba.exe	5a100caa5954148

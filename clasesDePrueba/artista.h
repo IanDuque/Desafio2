@@ -23,6 +23,7 @@ public:
     void agregarAlbum(int idAlbum, const string& nombreAlbum);
     void mostrar() const;
     int getId() const;
+    string getnombre() const;
 };
 
 #endif

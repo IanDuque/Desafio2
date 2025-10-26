@@ -1,0 +1,5 @@
+10001|Noobes|28|Colombia|50000
+10002|El del sur|35|Mexico|120000
+10003|ElectroNova|22|Argentina|75000
+10004|Fusion Latina|30|Peru|88000
+10005|Rockalipsis|40|Chile|95000

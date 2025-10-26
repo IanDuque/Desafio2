@@ -9,7 +9,9 @@ add_executable(clasesDePrueba main.cpp
     album.h album.cpp
     artista.h artista.cpp
     precarga.h precarga.cpp
-    cancion.h cancion.cpp)
+    cancion.h cancion.cpp
+    metricas.h
+    metricas.cpp)
 
 include(GNUInstallDirs)
 install(TARGETS clasesDePrueba
