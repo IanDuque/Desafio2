@@ -5,11 +5,12 @@
 #include <ctime>
 using namespace std;
 
+//clase que se encarga de crear los objetos para cada anuncio, haciendo todas las operaciones pertinentes para su rellenado.
 class ManejadorAnuncios {
 private:
     string archivo;
     string anuncio_actual;
-
+    string categoria;
 public:
     ManejadorAnuncios(string nombre_archivo) {
         archivo = nombre_archivo;
@@ -22,15 +23,18 @@ public:
         int inicio = 0, fin = 0;
 
         // Determinar rango según prioridad
-        if (tipo == 1) {          // C
+        if (tipo == 1) {            // C
             inicio = 1;
             fin = 15;
+            categoria="C";
         } else if (tipo <= 3) {   // B
             inicio = 19;
             fin = 33;
+            categoria="B";
         } else {                  // AAA
             inicio = 37;
             fin = 51;
+            categoria="AAA";
         }
 
         // Elegir línea aleatoria dentro del rango
@@ -57,11 +61,7 @@ public:
     }
 
     void mostrarAnuncio() {
-        cout << anuncio_actual << endl;
-    }
-
-    ~ManejadorAnuncios(){
-        cout << "eliminado" << endl;
+        cout << anuncio_actual << endl << "categoria " << categoria << endl;
     }
 };
 
