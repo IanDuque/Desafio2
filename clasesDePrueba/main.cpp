@@ -24,7 +24,7 @@ int main() {
     cargarArtistas("artista.txt", artistas, totalArtistas);
     cargarAlbumes("album.txt", albumes, totalAlbumes, artistas, totalArtistas);
     cargarCanciones("cancion.txt", albumes, totalAlbumes);
-
+    /*
     cout << "\n ARTISTAS PRECARGADOS:\n";
     for (int i = 0; i < totalArtistas; ++i) {
         artistas[i].mostrar();
@@ -35,7 +35,7 @@ int main() {
     for (int i = 0; i < totalAlbumes; ++i) {
         albumes[i].mostrar();
     }
-
+    */
     //se cierra el archivo al final de la ejecucion
     metricas.close();
     return 0;

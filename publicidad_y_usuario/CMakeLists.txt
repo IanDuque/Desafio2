@@ -5,8 +5,10 @@ project(publicidad_y_usuario LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(publicidad_y_usuario main.cpp
-    anuncios.h)
+add_executable(publicidad_y_usuario anuncios.cpp
+    anuncios.h
+    usuario.h
+    usuario.cpp)
 
 include(GNUInstallDirs)
 install(TARGETS publicidad_y_usuario
