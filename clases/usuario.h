@@ -28,6 +28,8 @@ public:
     void setCiudad(const string& ciudad);
     void setPais(const string& pais);
     void setFechaRegistro(const string& fechaRegistro);
+    int getCantidadFavoritos() const;
+    int getFavoritoPorIndice(int indice) const;
 
     // Gestión de archivos.
     void cargarFavoritos();

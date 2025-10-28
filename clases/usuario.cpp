@@ -1,4 +1,4 @@
-#include "Usuario.h"
+#include "usuario.h"
 #include <fstream>
 #include <cstdlib>
 #include <iostream>
@@ -185,4 +185,16 @@ void Usuario::mostrarFavoritos(const Album albumes[], int totalAlbumes) const {
 void Usuario::eliminarFavoritosDeOtro() {
     cantidadFavoritostotal = cantidadFavoritosusuario;
 }
+int Usuario::getCantidadFavoritos() const {
+    return cantidadFavoritosusuario;
+}
 
+
+int Usuario::getFavoritoPorIndice(int indice) const {
+    // Verificación de límites para seguridad
+    if (indice >= 0 && indice < cantidadFavoritosusuario) {
+        return favoritos[indice];
+    }
+    // Devolver un ID inválido si el índice está fuera de rango
+    return -1;
+}

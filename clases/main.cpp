@@ -13,8 +13,8 @@ const int MAX_ARTISTAS = 100;
 const int MAX_AL = 100;
 long int iteraciones = 0;
 
-Artistica artistas[MAX_ARTISTAS];
-Album albumes[MAX_AL];
+Artistica* artistas = new Artistica[MAX_ARTISTAS];
+Album* albumes = new Album[MAX_AL];
 int totalArtistas = 0;
 int totalAlbumes = 0;
 
@@ -36,7 +36,7 @@ int main() {
     //mientras la opcion no sea 0 el programa continua ejecutandose.
     do {
         //se pasa por referencia metricas para que
-        opcion = menuPrincipal(metricas);
+        opcion = menuPrincipal(metricas, albumes, totalAlbumes);
     } while (opcion != 0);
 
     //se cierra el archivo de metricas al finalizar la ejecucion.

@@ -25,12 +25,20 @@ private:
 
 public:
     Album();
+    // CORRECCION: El argumento float duracionalbum en setDatos no es necesario,
+    // se pasa como un argumento comodin (placeholder) para mantener la compatibilidad con el codigo de carga.
     void setDatos(int _id, const string& _nombre, const string& _artista, const string& _genero,
-                  const string& _disquera, const string& _fecha, const string& _ruta, int _calif, float duracionalbum);
+                  const string& _disquera, const string& _fecha, const string& _ruta, int _calif, float _duracionTotalPlaceholder);
     void agregarCancion(int idCancion, const string& nombreCancion, float duracion);
     void mostrar() const;
     int getId() const;
     float getduracion();
+
+    void simularReproduccion(int idCancion) const;
+    string getArtista() const;
+    int getIDdeCancionAleatoria() const;
+    string getNombre() const;
+    int getCantidadCanciones() const;
 };
 
 #endif

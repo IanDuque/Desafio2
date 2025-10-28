@@ -24,6 +24,7 @@ public:
     void mostrar() const;
     int getId() const;
     string getnombre() const;
+
 };
 
 #endif

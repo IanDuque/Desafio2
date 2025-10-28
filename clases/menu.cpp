@@ -5,22 +5,15 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include "precarga.h" // Se usa para MAX_CAMPO_LEN y MAX_FIELDS
+#include <cctype>
+
 using namespace std;
 
-Usuario usuarioactual;
+// IMPORTANTE: La funcion dividirCampos fue eliminada de aqui y ahora
+// solo esta en precarga.cpp, como debe ser, usando la declaracion de precarga.h.
 
-void dividirCampos(const string& linea, char campos[][30], int& cantidad) {
-    cantidad = 0;
-    char buffer[500];
-    strcpy(buffer, linea.c_str());
-
-    char* token = strtok(buffer, "|");
-    while (token != nullptr && cantidad < 10) {
-        strcpy(campos[cantidad], token);
-        cantidad++;
-        token = strtok(nullptr, "|");
-    }
-}
+Usuario usuarioactual; // Declaracion de la variable global
 
 void ingresarusuario() {
     string nickname;
@@ -44,7 +37,8 @@ void ingresarusuario() {
         while (getline(accesos, linea)) {
             if (linea.find(nickname + "|") == 0) {
                 usuarioencontrado = true;
-                char campos[20][30];
+                // CORRECCION: Usar las constantes de tamano de precarga.h
+                char campos[MAX_FIELDS][MAX_CAMPO_LEN];
                 int cantidadCampos = 0;
 
                 dividirCampos(linea, campos, cantidadCampos);
@@ -71,7 +65,7 @@ void ingresarusuario() {
             cout << "[M] Regresar al Menu Principal" << endl;
             cout << "Seleccione una opcion: ";
             cin >> opcion;
-            opcion = toupper(opcion);
+            opcion = toupper(static_cast<unsigned char>(opcion));
 
             if (opcion == 'M') {
                 break;
@@ -80,12 +74,18 @@ void ingresarusuario() {
 
     } while (opcion == 'R');
 }
-int menuPrincipal(fstream& metricas) {
+int menuPrincipal(fstream& metricas, Album albumes[], int totalAlbumes) {
     int opcion;
 
     while (true) {
+        // CORRECCION CRITICA: Manejo robusto de entrada invalida
+        if (cin.fail()) {
+            cin.clear(); // Restablece los flags de error de cin
+            cin.ignore(1000, '\n'); // Desecha los caracteres restantes en el buffer
+        }
+
         cout << "\n============================================\n";
-        cout << "                MENU PRINCIPAL            \n";
+        cout << "               MENU PRINCIPAL               \n";
         cout << "============================================\n";
         cout << "  [1] Ingresar / Cambiar de Usuario\n";
         cout << "  [2] Reproducir Cancion Aleatoria\n";
@@ -100,8 +100,10 @@ int menuPrincipal(fstream& metricas) {
             if (opcion >= 0 && opcion <= 4) {
                 break;
             } else {
-                cout << "Opcion invalida";
+                cout << "Opcion invalida. Ingrese un numero entre 0 y 4.\n";
             }
+        } else {
+            cout << "Entrada invalida. Por favor, ingrese solo el numero de la opcion (0-4).\n";
         }
     }
 
@@ -109,12 +111,41 @@ int menuPrincipal(fstream& metricas) {
     switch (opcion) {
     case 1:
         ingresarusuario();
+        // CRITICO: Cargar la lista de favoritos inmediatamente despues de ingresar
+        if (!usuarioactual.getNombre().empty()) {
+            usuarioactual.cargarFavoritos();
+        }
         break;
     case 2:
-        //reproducirAleatorio();
+        if (usuarioactual.getNombre().empty()) {
+            cout << "Debe ingresar un usuario primero (Opcion 1).\n";
+        } else {
+            char origen;
+            cout << "\n Seleccione origen de la reproduccion aleatoria:\n";
+            cout << " [F] Favoritos\n";
+            cout << " [C] Catalogo\n";
+            cout << " Seleccione: ";
+            cin >> origen;
+            origen = toupper(static_cast<unsigned char>(origen));
+
+            if (origen == 'F') {
+
+                reproducirAleatorioFavoritos(usuarioactual, albumes, totalAlbumes);
+            } else if (origen == 'C') {
+
+                reproducirAleatorioCatalogo(albumes, totalAlbumes);
+            } else {
+                cout << "Opcion invalida. Regresando al menu.\n";
+            }
+        }
         break;
     case 3:
-        //reproducirFavoritos();
+        if (usuarioactual.getNombre().empty()) {
+            cout << "Debe ingresar un usuario primero (Opcion 1).\n";
+        } else {
+            // Asumo que esta funcion existe:
+            usuarioactual.mostrarFavoritos(albumes, totalAlbumes);
+        }
         break;
     case 4:
         //mostrarmetricas();
@@ -124,5 +155,4 @@ int menuPrincipal(fstream& metricas) {
         break;
     }
     return opcion;
-
 }

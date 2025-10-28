@@ -1,4 +1,4 @@
-#include "Artista.h"
+#include "artista.h"
 #include <iostream>
 using namespace std;
 
