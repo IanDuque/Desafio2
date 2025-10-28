@@ -3,7 +3,6 @@
 #include <string>
 using namespace std;
 
-//clase que se encarga de crear los objetos para cada anuncio, haciendo todas las operaciones pertinentes para su rellenado.
 class ManejadorAnuncios {
 private:
     string archivo;
@@ -12,11 +11,13 @@ private:
 public:
     ManejadorAnuncios(string nombre_archivo);
 
-    // Obtiene un anuncio aleatorio según la prioridad
     string obtenerAnuncio();
 
     void mostrarAnuncio();
+
+    string getCategoria() const { return categoria; }
+    string getAnuncio() const { return anuncio_actual; }
 };
 
 void anuncio();
-#endif // ANUNCIOS_H
+#endif

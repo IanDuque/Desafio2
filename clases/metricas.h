@@ -10,4 +10,4 @@ void abrir_archivo();
 void cerrar_archivo();
 void agregar_metrica(long int iteraciones, long int memoria, string nombrefuncion);
 void mostrarmetricas();
-#endif // METRICAS_H
+#endif

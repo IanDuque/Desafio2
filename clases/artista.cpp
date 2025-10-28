@@ -20,7 +20,7 @@ void Artistica::agregarAlbum(int idAlbum, const string& nombreAlbum) {
         nombresAlbumes[cantidadAlbumes] = nombreAlbum;
         cantidadAlbumes++;
     } else {
-        cout << "⚠️ Máximo de 10 álbumes alcanzado." << endl;
+        cout << "Maximo de 20 albumes alcanzado." << endl;
     }
 }
 

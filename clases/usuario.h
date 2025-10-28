@@ -30,6 +30,9 @@ public:
     void setFechaRegistro(const string& fechaRegistro);
     int getCantidadFavoritos() const;
     int getFavoritoPorIndice(int indice) const;
+    bool getmembresia() const;
+    const int* getFavoritos() const;
+    int getCantidadFavoritosusuario() const;
 
     // Gestión de archivos.
     void cargarFavoritos();

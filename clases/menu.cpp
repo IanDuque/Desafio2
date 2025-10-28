@@ -1,19 +1,178 @@
 #include "menu.h"
 #include "usuario.h"
+#include "album.h"
+#include "artista.h"
+#include "cancion.h"
+#include "precarga.h"
+#include "anuncios.h"
 #include <cstring>
 #include <cstdlib>
 #include <iostream>
 #include <string>
 #include <fstream>
-#include "precarga.h" // Se usa para MAX_CAMPO_LEN y MAX_FIELDS
-#include <cctype>
 
 using namespace std;
 
-// IMPORTANTE: La funcion dividirCampos fue eliminada de aqui y ahora
-// solo esta en precarga.cpp, como debe ser, usando la declaracion de precarga.h.
+extern Usuario usuarioactual;
+extern int contadorCancionesReproducidas;
 
-Usuario usuarioactual; // Declaracion de la variable global
+void menuReproduccion(bool esPremium);
+
+char toUpperChar(char c) {
+    if (c >= 'a' && c <= 'z') {
+        return c - ('a' - 'A');
+    }
+    return c;
+}
+
+const Cancion* buscarCancionPorId(int idCancion, const Album albumes[], int totalAlbumes) {
+    int idAlbumCompleto = idCancion / 100;
+
+    for (int i = 0; i < totalAlbumes; ++i) {
+        if (albumes[i].getId() == idAlbumCompleto) {
+            const Cancion* cancion = albumes[i].getCancionPorId(idCancion);
+            if (cancion != nullptr) {
+                return cancion;
+            }
+        }
+    }
+    return nullptr;
+}
+
+void simularReproduccion(const Cancion& cancion, const Album& album) {
+
+    contadorCancionesReproducidas++;
+
+    bool esPremium = usuarioactual.getmembresia();
+    bool mostrarAnuncio = !esPremium && (contadorCancionesReproducidas > 1) && (contadorCancionesReproducidas % 2 == 0);
+
+    ManejadorAnuncios *anuncio = nullptr;
+
+    if (mostrarAnuncio) {
+        anuncio = new ManejadorAnuncios("anuncios.txt");
+        anuncio->obtenerAnuncio();
+    }
+
+    cout << "\n============================================\n";
+    cout << "           REPRODUCIENDO\n";
+    cout << "============================================\n";
+
+    if (mostrarAnuncio && anuncio != nullptr) {
+        cout << "Mensaje publicitario\": " << anuncio->getAnuncio() << endl;
+        cout << "Categoría del mensaje: " << anuncio->getCategoria() << endl;
+        cout << "--------------------------------------------\n";
+    }
+    cout << "Cantante: " << album.getArtista() << endl;
+    cout << "Álbum: " << album.getNombre() << endl;
+    cout << "Ruta a la portada del álbum: " << album.getPortada() << endl;
+    cout << "Título de la canción reproducida: " << cancion.getNombre() << endl;
+    cout << "Ruta al archivo de audio: [Ruta/de/audio/" << cancion.getId() << ".mp3]" << endl;
+    cout << "Duración: " << cancion.getDuracion() << " segundos" << endl;
+    cout << "--------------------------------------------\n";
+
+    menuReproduccion(esPremium);
+
+    if (anuncio != nullptr) {
+        delete anuncio;
+        anuncio = nullptr;
+    }
+}
+
+void reproducirFavoritos(const Usuario& usuario, const Album albumes[], int totalAlbumes) {
+
+    const int* favoritos = usuario.getFavoritos();
+    int cantidad = usuario.getCantidadFavoritosusuario();
+
+    if (cantidad == 0) {
+        cout << "\nTu lista de favoritos esta vacia. No hay canciones para reproducir." << endl;
+        return;
+    }
+
+    cout << "\n============================================\n";
+    cout << "  LISTA DE FAVORITOS: " << usuario.getNombre() << "\n";
+    cout << "============================================\n";
+
+    for (int i = 0; i < cantidad; ++i) {
+        int idActual = favoritos[i];
+
+        const Cancion* cancion = buscarCancionPorId(idActual, albumes, totalAlbumes);
+        const Album* album = nullptr;
+
+        if (cancion != nullptr) {
+            int idAlbumCompleto = idActual / 100;
+            for (int j = 0; j < totalAlbumes; ++j) {
+                if (albumes[j].getId() == idAlbumCompleto) {
+                    album = &albumes[j];
+                    break;
+                }
+            }
+        }
+
+        if (cancion != nullptr && album != nullptr) {
+            cout << "Cargando cancion " << i + 1 << " de la lista...\n";
+            simularReproduccion(*cancion, *album);
+        } else {
+            cout << "[" << i + 1 << "/" << cantidad << "]Cancion con ID " << idActual << " no encontrada en el catalogo." << endl;
+        }
+    }
+    cout << "\nReproduccion de la lista finalizada." << endl;
+}
+
+void menuReproduccion(bool esPremium) {
+
+    int opcion;
+    bool enPausa = true;
+
+    while (true) {
+        cout << "\n--- CONTROL DE REPRODUCCIÓN ---\n";
+
+        if (esPremium) {
+            cout << "  [1] " << (enPausa ? "Continuar" : "Pausar") << "\n";
+            cout << "  [2] Siguiente\n";
+            cout << "  [3] Anterior (Solo Premium)\n";
+            cout << "  [4] Bucle (Solo Premium)\n";
+        } else {
+            cout << "  [1] " << (enPausa ? "Continuar" : "Pausar") << "\n";
+            cout << "  [2] Siguiente\n";
+        }
+
+        cout << "  [0] Salir de la reproducción\n";
+        cout << "-------------------------------\n";
+        cout << "Seleccione una opcion: ";
+
+        if (!(cin >> opcion)) {
+            cout << "Entrada no valida." << endl;
+            break;
+        }
+
+        if (!esPremium && (opcion == 3 || opcion == 4)) {
+            cout << "Opcion solo disponible para usuarios PREMIUM." << endl;
+            continue;
+        }
+
+        switch (opcion) {
+        case 1:
+            enPausa = !enPausa;
+            cout << (enPausa ? "Pausado." : "Continuando.") << endl;
+            break;
+        case 2:
+            cout << "⏩ Saltando a la siguiente canción." << endl;
+            return;
+        case 3:
+            if (esPremium) { cout << "Volviendo a la cancion anterior." << endl; }
+            break;
+        case 4:
+            if (esPremium) { cout << "Activando/Desactivando bucle." << endl; }
+            break;
+        case 0:
+            cout << "\nVolviendo al Menú Principal..." << endl;
+            return;
+        default:
+            cout << "Opcion invalida. Intente de nuevo." << endl;
+            break;
+        }
+    }
+}
 
 void ingresarusuario() {
     string nickname;
@@ -37,14 +196,12 @@ void ingresarusuario() {
         while (getline(accesos, linea)) {
             if (linea.find(nickname + "|") == 0) {
                 usuarioencontrado = true;
-                // CORRECCION: Usar las constantes de tamano de precarga.h
                 char campos[MAX_FIELDS][MAX_CAMPO_LEN];
                 int cantidadCampos = 0;
 
                 dividirCampos(linea, campos, cantidadCampos);
 
                 if (cantidadCampos >= 5) {
-
                     usuarioactual.setNombre(string(campos[0]));
                     usuarioactual.setmembresia(string(campos[1]));
                     usuarioactual.setCiudad(string(campos[2]));
@@ -59,13 +216,13 @@ void ingresarusuario() {
         }
         accesos.close();
 
-        if (!usuarioencontrado && opcion != 'M') { // Si no fue encontrado y no hubo error de archivo
+        if (!usuarioencontrado && opcion != 'M') {
             cerr << "El usuario ingresado no se encuentra registrado en la plataforma." << endl;
             cout << "[R] Reintentar ingreso" << endl;
             cout << "[M] Regresar al Menu Principal" << endl;
             cout << "Seleccione una opcion: ";
             cin >> opcion;
-            opcion = toupper(static_cast<unsigned char>(opcion));
+            opcion = toUpperChar(opcion);
 
             if (opcion == 'M') {
                 break;
@@ -74,18 +231,18 @@ void ingresarusuario() {
 
     } while (opcion == 'R');
 }
+
 int menuPrincipal(fstream& metricas, Album albumes[], int totalAlbumes) {
     int opcion;
 
     while (true) {
-        // CORRECCION CRITICA: Manejo robusto de entrada invalida
         if (cin.fail()) {
-            cin.clear(); // Restablece los flags de error de cin
-            cin.ignore(1000, '\n'); // Desecha los caracteres restantes en el buffer
+            cin.clear();
+            cin.ignore(1000, '\n');
         }
 
         cout << "\n============================================\n";
-        cout << "               MENU PRINCIPAL               \n";
+        cout << "             MENU PRINCIPAL              \n";
         cout << "============================================\n";
         cout << "  [1] Ingresar / Cambiar de Usuario\n";
         cout << "  [2] Reproducir Cancion Aleatoria\n";
@@ -95,7 +252,6 @@ int menuPrincipal(fstream& metricas, Album albumes[], int totalAlbumes) {
         cout << "--------------------------------------------\n";
         cout << "Seleccione una opcion: ";
 
-        //si se ingreso una opcion y esta esta entre 0 y 4 continua al switch.
         if (cin >> opcion) {
             if (opcion >= 0 && opcion <= 4) {
                 break;
@@ -107,11 +263,13 @@ int menuPrincipal(fstream& metricas, Album albumes[], int totalAlbumes) {
         }
     }
 
-    //se elige una opcion a realizar
+    if (opcion != 3 && opcion != 2) {
+        contadorCancionesReproducidas = 0;
+    }
+
     switch (opcion) {
     case 1:
         ingresarusuario();
-        // CRITICO: Cargar la lista de favoritos inmediatamente despues de ingresar
         if (!usuarioactual.getNombre().empty()) {
             usuarioactual.cargarFavoritos();
         }
@@ -126,13 +284,16 @@ int menuPrincipal(fstream& metricas, Album albumes[], int totalAlbumes) {
             cout << " [C] Catalogo\n";
             cout << " Seleccione: ";
             cin >> origen;
-            origen = toupper(static_cast<unsigned char>(origen));
+            origen = toUpperChar(origen);
 
             if (origen == 'F') {
-
-                reproducirAleatorioFavoritos(usuarioactual, albumes, totalAlbumes);
+                if (usuarioactual.getmembresia()==1){
+                    reproducirAleatorioFavoritos(usuarioactual, albumes, totalAlbumes);
+                }
+                else {
+                    cout << "necesita ser premium para acceder a esta funcion" << endl;
+                }
             } else if (origen == 'C') {
-
                 reproducirAleatorioCatalogo(albumes, totalAlbumes);
             } else {
                 cout << "Opcion invalida. Regresando al menu.\n";
@@ -143,8 +304,12 @@ int menuPrincipal(fstream& metricas, Album albumes[], int totalAlbumes) {
         if (usuarioactual.getNombre().empty()) {
             cout << "Debe ingresar un usuario primero (Opcion 1).\n";
         } else {
-            // Asumo que esta funcion existe:
-            usuarioactual.mostrarFavoritos(albumes, totalAlbumes);
+            if (usuarioactual.getmembresia()==1){
+                reproducirFavoritos(usuarioactual, albumes, totalAlbumes);
+            }
+            else {
+                cout << "necesita ser premium para acceder a esta funcion" << endl;
+            }
         }
         break;
     case 4:

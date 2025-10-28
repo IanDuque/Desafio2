@@ -4,7 +4,8 @@
 #include <string>
 using namespace std;
 
-const int MAX_ALBUMES = 10;
+const int MAX_ARTISTAS = 30;
+const int MAX_ALBUMES = 20;
 
 class Artistica {
 private:

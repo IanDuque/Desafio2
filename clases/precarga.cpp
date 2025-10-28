@@ -6,25 +6,24 @@
 #include <ctime>
 #include "usuario.h"
 #include "album.h"
-#include "artista.h" // Asegurar que esta clase se pueda usar
-
+#include "cancion.h"
+#include "artista.h"
+#include "menu.h"
 using namespace std;
 
-// CORRECCION DE SEGURIDAD: Uso de strncpy para evitar desbordamiento de buffer
+extern Usuario usuarioactual;
 void dividirCampos(const string& linea, char campos[][MAX_CAMPO_LEN], int& cantidad) {
     cantidad = 0;
     const int LINE_BUFFER_SIZE = 500;
     char buffer[LINE_BUFFER_SIZE];
 
-    // Copia segura de la linea al buffer local (usando LINE_BUFFER_SIZE - 1)
     strncpy(buffer, linea.c_str(), LINE_BUFFER_SIZE - 1);
-    buffer[LINE_BUFFER_SIZE - 1] = '\0'; // Asegurar terminador nulo
+    buffer[LINE_BUFFER_SIZE - 1] = '\0';
 
     char* token = strtok(buffer, "|");
     while (token != nullptr && cantidad < MAX_FIELDS) {
-        // Copia segura del token al campo (usando MAX_CAMPO_LEN - 1)
         strncpy(campos[cantidad], token, MAX_CAMPO_LEN - 1);
-        campos[cantidad][MAX_CAMPO_LEN - 1] = '\0'; // Asegurar terminador nulo
+        campos[cantidad][MAX_CAMPO_LEN - 1] = '\0';
         cantidad++;
         token = strtok(nullptr, "|");
     }
@@ -127,61 +126,59 @@ void cargarCanciones(const string& ruta, Album albumes[], int totalAlbumes) {
     file.close();
 }
 void reproducirAleatorioFavoritos(const Usuario& usuario, const Album albumes[], int totalAlbumes) {
-    if (usuario.getCantidadFavoritos() == 0) {
-        cout << "Tu lista de favoritos esta vacia. No se puede reproducir.\n";
+    int cantidad = usuario.getCantidadFavoritosusuario();
+
+    if (cantidad == 0) {
+        cout << "Tu lista de favoritos esta vacia." << endl;
         return;
     }
 
-    // 1. Generar un indice aleatorio dentro del rango de favoritos
-    int indiceAleatorio = rand() % usuario.getCantidadFavoritos();
+    int indiceAleatorio = rand() % cantidad;
+    int idCancionAleatoria = usuario.getFavoritoPorIndice(indiceAleatorio);
 
-    // 2. Obtener el ID de la cancion favorita
-    int idCancion = usuario.getFavoritoPorIndice(indiceAleatorio);
+    const Cancion* cancion = buscarCancionPorId(idCancionAleatoria, albumes, totalAlbumes);
+    const Album* album = nullptr;
 
-    // 3. Obtener el ID del album al que pertenece (AABB del AABBCC)
-    int idAlbumBuscado = (idCancion / 100);
-
-    cout << "\n Reproduciendo de FAVORITOS:\n";
-    for (int i = 0; i < totalAlbumes; ++i) {
-        if (albumes[i].getId() == idAlbumBuscado) {
-            // Llama a la nueva funcion del Album
-            albumes[i].simularReproduccion(idCancion);
-            return;
+    if (cancion != nullptr) {
+        int idAlbumCompleto = idCancionAleatoria / 100;
+        for (int j = 0; j < totalAlbumes; ++j) {
+            if (albumes[j].getId() == idAlbumCompleto) {
+                album = &albumes[j];
+                break;
+            }
         }
     }
 
-    cout << "  -> Error: No se encontro el Album (ID: " << idAlbumBuscado << ") en el catalogo.\n";
+    // 3. Llamar a la simulación con el menú y anuncios
+    if (cancion != nullptr && album != nullptr) {
+        cout << "Reproduccion Aleatoria de Favoritos iniciada.\n";
+        simularReproduccion(*cancion, *album);
+    } else {
+        cout << "La cancion favorita seleccionada (ID: " << idCancionAleatoria << ") no se encontro en el catalogo." << endl;
+    }
 }
 
-// --- FUNCION 2: Reproducir Aleatorio del Catalogo Completo ---
 void reproducirAleatorioCatalogo(const Album albumes[], int totalAlbumes) {
+
     if (totalAlbumes == 0) {
-        cout << "El catalogo esta vacio. No se puede reproducir.\n";
+        cout << "El catalogo esta vacio." << endl;
         return;
     }
 
-    // 1. Elegir un album aleatorio
-    int indiceAlbum = 0;
+    int indiceAlbum = rand() % totalAlbumes;
+    const Album& albumAleatorio = albumes[indiceAlbum];
 
-    // Aseguramos que elegimos un album que tenga al menos una cancion
-    do {
-        indiceAlbum = rand() % totalAlbumes;
-    } while (albumes[indiceAlbum].getCantidadCanciones() == 0 && totalAlbumes > 1);
-
-    const Album& albumSeleccionado = albumes[indiceAlbum];
-
-    if (albumSeleccionado.getCantidadCanciones() == 0) {
-        cout << "Error: No se encontraron canciones en los albumes precargados.\n";
+    if (albumAleatorio.getCantidadCanciones() == 0) {
+        cout << "El album seleccionado no tiene canciones." << endl;
         return;
     }
+    int idCancionAleatoria = albumAleatorio.getIDdeCancionAleatoria();
 
-    // 2. Elegir una cancion aleatoria dentro de ese album
-    int idCancion = albumSeleccionado.getIDdeCancionAleatoria();
+    const Cancion* cancion = albumAleatorio.getCancionPorId(idCancionAleatoria);
 
-    // Se elimino el acento de CATALGO
-    cout << "\n Reproduciendo del CATALOGO COMPLETO:\n";
-    cout << "  -> Artista: " << albumSeleccionado.getArtista() << ", Album: " << albumSeleccionado.getNombre() << endl;
-
-    // Llama a la nueva funcion del Album
-    albumSeleccionado.simularReproduccion(idCancion);
+    if (cancion != nullptr) {
+        simularReproduccion(*cancion, albumAleatorio);
+    } else {
+        cout << "La cancion seleccionada (ID: " << idCancionAleatoria << ") no se encontro." << endl;
+    }
 }

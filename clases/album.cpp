@@ -1,10 +1,14 @@
 #include "album.h"
 #include <iostream>
 #include <cstdlib>
+#include <ctime>
+
 using namespace std;
 
-// CORRECCION: Inicializar duracionalbum en el constructor, no en setDatos
-Album::Album() : id(0), calificacion(0), cantidadCanciones(0), duracionalbum(0.0) {}
+Album::Album() : id(0), nombre(""), artista(""), genero(""), disquera(""), fechaLanzamiento(""),
+    rutaPortada(""), calificacion(0), cantidadCanciones(0), duracionalbum(0.0f) {
+    // Inicialización por defecto
+}
 
 void Album::setDatos(int _id, const string& _nombre, const string& _artista, const string& _genero,
                      const string& _disquera, const string& _fecha, const string& _ruta, int _calif, float _duracionTotalPlaceholder) {
@@ -16,68 +20,75 @@ void Album::setDatos(int _id, const string& _nombre, const string& _artista, con
     fechaLanzamiento = _fecha;
     rutaPortada = _ruta;
     calificacion = _calif;
-    // CORRECCION: Se elimino la linea "duracionalbum = 0;" que borraba el acumulado.
 }
 
 void Album::agregarCancion(int idCancion, const string& nombreCancion, float duracion) {
     if (cantidadCanciones < MAX_CANCIONES) {
-        idsCanciones[cantidadCanciones] = idCancion;
-        nombresCanciones[cantidadCanciones] = nombreCancion;
-        duracionesCanciones[cantidadCanciones] = duracion;
-        duracionalbum+=duracion;
+        canciones[cantidadCanciones].setDatos(idCancion, nombreCancion, duracion);
+        duracionalbum += duracion;
         cantidadCanciones++;
     } else {
-        // Se elimino el acento de "Maximo"
-        cout << " Maximo de 15 canciones alcanzado." << endl;
+        cerr << "ADVERTENCIA: Limite de canciones (" << MAX_CANCIONES << ") alcanzado en el album " << nombre << endl;
     }
 }
 
-void Album::mostrar() const {
-    cout << "Album [" << id << "]: " << nombre << " de " << artista << endl;
-    cout << "  Genero: " << genero << ", Disquera: " << disquera << ", Fecha: " << fechaLanzamiento << endl;
-    cout << "  Portada: " << rutaPortada << ", Calificacion: " << calificacion << "/10" << endl;
-    cout << "  Canciones (" << cantidadCanciones << "):" << endl;
+const Cancion* Album::getCancionPorId(int idCancion) const {
     for (int i = 0; i < cantidadCanciones; ++i) {
-        cout << "    - [" << idsCanciones[i] << "] " << nombresCanciones[i]
-             << " (" << duracionesCanciones[i] << " min)" << endl;
-    }
-}
-int Album::getId() const {
-    return id;
-}
-float Album::getduracion() {
-    return duracionalbum;
-}
-void Album::simularReproduccion(int idCancion) const {
-    for (int i = 0; i < cantidadCanciones; ++i) {
-        if (idsCanciones[i] == idCancion) {
-            // Se elimino el acento de "Cancion"
-            cout << "  - REPRODUCIENDO: Cancion [" << idsCanciones[i] << "] "
-                 << nombresCanciones[i] << " (" << duracionesCanciones[i] << " min)"
-                 << " del Album: " << nombre << endl;
-            return;
+        if (canciones[i].getId() == idCancion) {
+            return &canciones[i];
         }
     }
-    // Se elimino el acento de "cancion"
-    cout << "  - Error: La cancion con ID " << idCancion << " no se encontro en el album." << endl;
+    return nullptr;
 }
 
-// NUEVA FUNCION 2: Obtiene el ID de una cancion aleatoria del album
-int Album::getIDdeCancionAleatoria() const {
-    if (cantidadCanciones == 0) return -1;
-    // rand() % N genera un numero entre 0 y N-1
-    int indiceAleatorio = rand() % cantidadCanciones;
-    return idsCanciones[indiceAleatorio];
+string Album::getPortada() const {
+    return rutaPortada;
 }
 
-// Getters (solo los necesarios para las funciones de reproduccion)
+string Album::getArtista() const {
+    return artista;
+}
+
 string Album::getNombre() const {
     return nombre;
+}
+
+int Album::getId() const {
+    return id;
 }
 
 int Album::getCantidadCanciones() const {
     return cantidadCanciones;
 }
-string Album::getArtista() const {
-    return artista;
+
+float Album::getduracion() const {
+    return duracionalbum;
+}
+
+int Album::getIDdeCancionAleatoria() const {
+    if (cantidadCanciones == 0) return -1;
+    int indice = rand() % cantidadCanciones;
+    return canciones[indice].getId();
+}
+
+void Album::simularReproduccion(int idCancion) const {
+    const Cancion* cancion = getCancionPorId(idCancion);
+    if (cancion != nullptr) {
+        cout << "\nSimulando reproduccion (ID: " << cancion->getId() << "):\n";
+        cout << "  -> Album: " << nombre << " (Artista: " << artista << ")\n";
+        cout << "  -> Titulo: " << cancion->getNombre() << " (Duracion: " << cancion->getDuracion() << "s)\n";
+    } else {
+        cout << "\nError: Cancion con ID " << idCancion << " no encontrada en el album " << nombre << ".\n";
+    }
+}
+
+void Album::mostrar() const {
+    cout << "ID Album: " << id << " | Nombre: " << nombre << " | Artista: " << artista << endl;
+    cout << "  Genero: " << genero << " | Disquera: " << disquera << " | Lanzamiento: " << fechaLanzamiento << endl;
+    cout << "  Calif: " << calificacion << "/5 | Canciones: " << cantidadCanciones << " | Duracion Total: " << duracionalbum << "s" << endl;
+    cout << "  Canciones incluidas:\n";
+
+    for (int i = 0; i < cantidadCanciones; ++i) {
+        cout << "    - ID: " << canciones[i].getId() << ", Titulo: " << canciones[i].getNombre() << ", Duracion: " << canciones[i].getDuracion() << "s\n";
+    }
 }

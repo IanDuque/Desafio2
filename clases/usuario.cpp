@@ -191,10 +191,19 @@ int Usuario::getCantidadFavoritos() const {
 
 
 int Usuario::getFavoritoPorIndice(int indice) const {
-    // Verificación de límites para seguridad
     if (indice >= 0 && indice < cantidadFavoritosusuario) {
         return favoritos[indice];
     }
-    // Devolver un ID inválido si el índice está fuera de rango
     return -1;
+}
+bool Usuario::getmembresia() const {
+    return premium ? 1 : 0;
+}
+
+const int* Usuario::getFavoritos() const {
+    return favoritos;
+}
+
+int Usuario::getCantidadFavoritosusuario() const {
+    return cantidadFavoritosusuario;
 }
